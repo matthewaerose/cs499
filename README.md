@@ -1,1 +1,3 @@
-# cs499
+# These are the projects for CS499, Spring 2018
+
+

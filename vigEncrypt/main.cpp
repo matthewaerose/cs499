@@ -20,7 +20,7 @@
 
 //using namespace std;
 std::string plainTextFile = "plaintext.txt";
-std::string cipherTextFile = "/tmp/vcipherkey.txt";
+std::string cipherTextFile = "vcipherkey.txt";
 //std::string outputTextFile = "/tmp/vigenerecipheroutput.txt";
 std::string outputTextFile = "/tmp/blockaffinecipherplaintextoutput.txt";
 
@@ -30,6 +30,8 @@ std::string alphabet_L = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 bool readInPlainText(std::string &sText);
 bool readInCipherKey(std::string &sKey);
 bool writeOutputFile(std::string output);
+
+bool writeFilesToTMP(void);
 
 std::string trim(const std::string &s);
 void removeSpaces(std::string &s);
@@ -212,4 +214,10 @@ void encrypt_L(std::string plain, std::string key, std::string &output) {
 
         keyCount++;
     }
+}
+
+bool writeFilesToTMP(void)
+{
+    
+    return true;
 }
