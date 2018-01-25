@@ -19,7 +19,7 @@
 #include <algorithm>
 
 //using namespace std;
-std::string plainTextFile = "plaintext.txt";
+std::string plainTextFile = "/tmp/plaintext.txt";
 std::string cipherTextFile = "vcipherkey.txt";
 //std::string outputTextFile = "/tmp/vigenerecipheroutput.txt";
 std::string outputTextFile = "/tmp/blockaffinecipherplaintextoutput.txt";
@@ -173,7 +173,7 @@ bool writeOutputFile(std::string output) {
 }
 
 void encrypt_S(std::string plain, std::string key, std::string &output) {
-    int keyCount = 0;
+    unsigned int keyCount = 0;
     int alphabetSize = alphabet_S.size();
     
     removeSpaces(plain);
@@ -194,7 +194,7 @@ void encrypt_S(std::string plain, std::string key, std::string &output) {
 }
 
 void encrypt_L(std::string plain, std::string key, std::string &output) {
-    int keyCount = 0;
+    unsigned int keyCount = 0;
     int alphabetSize = alphabet_L.size();
     
     removeSpaces(plain);
