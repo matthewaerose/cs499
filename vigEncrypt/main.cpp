@@ -167,7 +167,6 @@ void removeSpaces(std::string &s) {
 }
 
 void removeLowercase(std::string &s) {
-    //    s.erase( std::remove_if(s.begin(),s.end(),[](unsigned char x){return std::islower(x);}) );
     s.erase(std::remove_if(s.begin(),
             s.end(),
             [](unsigned char x) {
@@ -200,7 +199,8 @@ void encrypt_S(std::string plain, std::string key, std::string &output) {
     int alphabetSize = alphabet_S.size();
 
     removeSpaces(plain);
-
+    removeLowercase(plain);
+    
     for (std::string::iterator it = plain.begin(); it != plain.end(); ++it) {
         if (keyCount == key.size()) keyCount = 0;
 
