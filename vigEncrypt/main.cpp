@@ -20,7 +20,7 @@
 
 //using namespace std;
 std::string plainTextFile = "/tmp/plaintext.txt";
-std::string cipherTextFile = "vcipherkey.txt";
+std::string cipherTextFile = "/tmp/vcipherkey.txt";
 //std::string outputTextFile = "/tmp/vigenerecipheroutput.txt";
 std::string outputTextFile = "/tmp/blockaffinecipherplaintextoutput.txt";
 
