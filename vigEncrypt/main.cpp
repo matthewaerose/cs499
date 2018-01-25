@@ -95,7 +95,10 @@ int main(int argc, char** argv) {
     std::cout << "Encrypted  : " << output << std::endl;
 
     std::cout << "Writing file " << outputTextFile << std::endl;
-    writeOutputFile(output);
+    if(writeOutputFile(output))
+        std::cout << "File was written" << std::endl;
+    else std::cout << "File was NOT written" << std::endl;
+    
 
     return 0;
 }
@@ -168,8 +171,11 @@ bool writeOutputFile(std::string output) {
                 ++it) {
             f << *it;
         }
+        return true;
 
     }
+    
+    return false;
 }
 
 void encrypt_S(std::string plain, std::string key, std::string &output) {
