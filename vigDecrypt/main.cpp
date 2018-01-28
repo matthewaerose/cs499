@@ -20,11 +20,11 @@
 
 //using namespace std;
 std::string plainTextFile = "/tmp/blockaffinecipherplaintextoutput.txt";
-std::string cipherTextFile = "vcipherkey.txt";
-std::string outputTextFile = "secondplaintext.txt";
+std::string cipherTextFile = "/tmp/vcipherkey.txt";
+std::string outputTextFile = "/tmp/secondplaintext.txt";
 
 std::string alphabet_S = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-std::string alphabet_L = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+const std::string alphabet_L = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
 bool readInPlainText(std::string &sText);
 bool readInCipherKey(std::string &sKey);
@@ -44,13 +44,13 @@ int main(int argc, char** argv) {
 
     std::string plainText = "this shouldn't be here";
     std::string cipherKey = "neither should this";
-    
+
     std::string input = "p";
     std::string ess = "S", ell = "L";
     std::string output = "";
 
     bool check = true;
-    
+
     if (readInPlainText(plainText)) {
     }//try to read in the plain text
     else {
@@ -146,12 +146,10 @@ std::string trim(const std::string& str) {
     return str.substr(first, (last - first + 1));
 }
 
-void removeSpaces(std::string &s)
-{
-    std::string::iterator endIterator = std::remove(s.begin(),s.end(), ' ');
+void removeSpaces(std::string &s) {
+    std::string::iterator endIterator = std::remove(s.begin(), s.end(), ' ');
     s.erase(endIterator, s.end());
 }
-
 
 bool writeOutputFile(std::string output) {
     std::ofstream f;
@@ -174,16 +172,16 @@ bool writeOutputFile(std::string output) {
 
 void decrypt_S(std::string plain, std::string key, std::string &output) {
     unsigned int keyCount = 0;
-
+    int alphaIndex = 0;
     removeSpaces(plain);
-    
+
     for (std::string::iterator it = plain.begin(); it != plain.end(); ++it) {
         if (keyCount == key.size()) keyCount = 0;
 
-        unsigned int alphaIndex = ((int) *it - 65) - ((int) key[keyCount] - 65);
+        int alphaIndex = ((int) *it - 65) - ((int) key[keyCount] - 65);
 
-        if (alphaIndex > (alphabet_S.size() - 1) ) {
-            alphaIndex = alphaIndex + alphabet_S.size();
+        if (alphaIndex < 0) {
+            alphaIndex = alphaIndex + 26;
         }
 
         output += alphabet_S[alphaIndex];
@@ -194,24 +192,33 @@ void decrypt_S(std::string plain, std::string key, std::string &output) {
 
 void decrypt_L(std::string plain, std::string key, std::string &output) {
     unsigned int keyCount = 0;
-    unsigned int alphaIndex = 0;
-//    int alphabetSize = alphabet_L.size();
-    
+    int alphaIndex = 0;
+    //    int alphabetSize = alphabet_L.size();
+
     removeSpaces(plain);
-    
+
     for (std::string::iterator it = plain.begin(); it != plain.end(); ++it) {
         if (keyCount == key.size()) keyCount = 0;
 
         //need to account for lower case numbers!
         //different ASCII values. See a table. 
 
-        if( (int) *it >= 97) {
-            alphaIndex = ((int) *it - 97) - ((int) key[keyCount] - 65) + 26;
+        if ((int) *it >= 97) {
+            int partA = (int) *it - 71;
+            int partB = (int) key[keyCount] - 65;
+            alphaIndex = partA - partB;
+        } else {
+            int partA = (int) *it - 65;
+            int partB = (int) key[keyCount] - 65;
+            alphaIndex = partA - partB;
         }
-        else {
-            alphaIndex = ((int) *it - 65) - ((int) key[keyCount] - 65);
+
+        //        alphaIndex = ((int) key[keyCount] - 65) + ((int) *it - 65);
+
+        if (alphaIndex < 0) {
+            alphaIndex = alphaIndex + 52;
         }
-        
+
         output += alphabet_L[alphaIndex];
 
         keyCount++;

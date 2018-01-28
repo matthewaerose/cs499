@@ -200,14 +200,14 @@ void encrypt_S(std::string plain, std::string key, std::string &output) {
 
     removeSpaces(plain);
     removeLowercase(plain);
-    
+
     for (std::string::iterator it = plain.begin(); it != plain.end(); ++it) {
         if (keyCount == key.size()) keyCount = 0;
 
         int alphaIndex = ((int) key[keyCount] - 65) + ((int) *it - 65);
 
         if (alphaIndex > (alphabetSize - 1)) {
-            alphaIndex = alphaIndex - alphabetSize;
+            alphaIndex = alphaIndex % 26;
         }
 
         output += alphabet_S[alphaIndex];
@@ -219,7 +219,7 @@ void encrypt_S(std::string plain, std::string key, std::string &output) {
 void encrypt_L(std::string plain, std::string key, std::string &output) {
     unsigned int keyCount = 0;
     int alphabetSize = alphabet_L.size();
-
+    int alphaIndex = 0;
     removeSpaces(plain);
 
     for (std::string::iterator it = plain.begin(); it != plain.end(); ++it) {
@@ -227,10 +227,18 @@ void encrypt_L(std::string plain, std::string key, std::string &output) {
 
         //need to account for lower case numbers!
         //different ASCII values. See a table.
-        int alphaIndex = ((int) key[keyCount] - 65) + ((int) *it - 65);
+        if ((int) *it >= 97) {
+            int partA = (int)*it - 71;
+            int partB = (int)key[keyCount] - 65;
+            alphaIndex = partA + partB;
+        } else {
+            alphaIndex = ((int) *it - 65) + ((int) key[keyCount] - 65);
+        }
 
-        if (alphaIndex > (alphabetSize - 1)) {
-            alphaIndex = alphaIndex - alphabetSize;
+//        alphaIndex = ((int) key[keyCount] - 65) + ((int) *it - 65);
+
+        if (alphaIndex > (alphabetSize)) {
+            alphaIndex = alphaIndex % 52;
         }
 
         output += alphabet_L[alphaIndex];
