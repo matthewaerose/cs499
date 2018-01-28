@@ -173,14 +173,14 @@ bool writeOutputFile(std::string output) {
 }
 
 void decrypt_S(std::string plain, std::string key, std::string &output) {
-    int keyCount = 0;
+    unsigned int keyCount = 0;
 
     removeSpaces(plain);
     
     for (std::string::iterator it = plain.begin(); it != plain.end(); ++it) {
         if (keyCount == key.size()) keyCount = 0;
 
-        int alphaIndex = ((int) *it - 65) - ((int) key[keyCount] - 65);
+        unsigned int alphaIndex = ((int) *it - 65) - ((int) key[keyCount] - 65);
 
         if (alphaIndex > (alphabet_S.size() - 1) ) {
             alphaIndex = alphaIndex + alphabet_S.size();
@@ -193,8 +193,8 @@ void decrypt_S(std::string plain, std::string key, std::string &output) {
 }
 
 void decrypt_L(std::string plain, std::string key, std::string &output) {
-    int keyCount = 0;
-    int alphaIndex = 0;
+    unsigned int keyCount = 0;
+    unsigned int alphaIndex = 0;
 //    int alphabetSize = alphabet_L.size();
     
     removeSpaces(plain);
