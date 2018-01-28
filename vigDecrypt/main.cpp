@@ -178,7 +178,7 @@ void decrypt_S(std::string plain, std::string key, std::string &output) {
     for (std::string::iterator it = plain.begin(); it != plain.end(); ++it) {
         if (keyCount == key.size()) keyCount = 0;
 
-        int alphaIndex = ((int) *it - 65) - ((int) key[keyCount] - 65);
+        alphaIndex = ((int) *it - 65) - ((int) key[keyCount] - 65);
 
         if (alphaIndex < 0) {
             alphaIndex = alphaIndex + 26;
