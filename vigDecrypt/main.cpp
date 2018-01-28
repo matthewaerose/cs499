@@ -159,14 +159,17 @@ bool writeOutputFile(std::string output) {
     f.open(outputTextFile.c_str(), (std::ios::out | std::ios::trunc));
 
     if (f.is_open()) {
-        
+
         for (std::string::iterator it = output.begin();
                 it != output.end();
                 ++it) {
             f << *it;
         }
+        return true;
 
     }
+
+    return false;
 }
 
 void decrypt_S(std::string plain, std::string key, std::string &output) {
@@ -192,7 +195,7 @@ void decrypt_S(std::string plain, std::string key, std::string &output) {
 void decrypt_L(std::string plain, std::string key, std::string &output) {
     int keyCount = 0;
     int alphaIndex = 0;
-    int alphabetSize = alphabet_L.size();
+//    int alphabetSize = alphabet_L.size();
     
     removeSpaces(plain);
     
