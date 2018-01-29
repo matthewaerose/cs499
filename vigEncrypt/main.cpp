@@ -23,8 +23,8 @@
 
 std::string plainTextFile = "/tmp/plaintext.txt";
 std::string cipherTextFile = "/tmp/vcipherkey.txt";
-//std::string outputTextFile = "/tmp/vigenerecipheroutput.txt";
-std::string outputTextFile = "/tmp/blockaffinecipherplaintextoutput.txt";
+std::string outputTextFile = "/tmp/vigenerecipheroutput.txt";
+//std::string outputTextFile = "/tmp/blockaffinecipherplaintextoutput.txt";
 
 std::string alphabet_S = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 std::string alphabet_L = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
