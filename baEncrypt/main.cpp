@@ -20,30 +20,35 @@
 #include <math.h>
 
 #include <cctype>
-#include <array>
+#include <vector>
 
 /*
  * 
  */
 
 void testCoprime(int a, int b);
-std::string inputFile = "/tmp/vigenerecipheroutput.txt";
+//std::string inputFile = "/tmp/vigenerecipheroutput.txt";
 //std::string cipherTextFile = "/tmp/vcipherkey.txt";
 //std::string outputTextFile = "/tmp/vigenerecipheroutput.txt";
-std::string outputTextFile = "/tmp/blockaffinecipherplaintextoutput.txt";
+//std::string outputTextFile = "/tmp/blockaffinecipherplaintextoutput.txt";
+
+std::string inputFile = "c:/myTmp/vigenerecipheroutput.txt";
+//std::string cipherTextFile = "/tmp/vcipherkey.txt";
+//std::string outputTextFile = "/tmp/vigenerecipheroutput.txt";
+std::string outputTextFile = "c:/myTmp/blockaffinecipherplaintextoutput.txt";
 
 std::string alphabet_S = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 std::string alphabet_L = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
-std::array<int> primeOfMultiplier;
-std::array<int> primeOfOffset;
+std::vector<int> primeOfMultiplier;
+std::vector<int> primeOfOffset;
 
 bool readInInputFile(std::string &sText);
 bool readInCipherKey(std::string &sKey);
 bool writeOutputFile(std::string output);
 
 int getPrimeFactors(int count);
-int
+
 bool getMultiplier(int &m);
 bool getOffset(int &o);
 bool getAlphabet(int &modulo);
@@ -66,7 +71,7 @@ int main(int argc, char** argv) {
     int multiplier = -1;
     int modulo = -1;
 
-    readInInputFile(inputText);
+//    readInInputFile(inputText);
 
     if (getAlphabet(modulo)) {
         std::cout << "Your modulo is " << modulo << std::endl;
@@ -78,12 +83,12 @@ int main(int argc, char** argv) {
         std::cout << "Thanks for the offset of " << offset << "!" << std::endl;
     }
 
-    if (checkIfRelativelyPrime(multiplier, modulo)) {
+//    if (checkIfRelativelyPrime(multiplier, modulo)) {
+//
+//    }
 
-    }
-
-    int counter = 1;
-    getPrimeFactors(counter);
+//    int counter = 1;
+//    getPrimeFactors(counter);
 
     testCoprime(multiplier, offset);
 
@@ -191,12 +196,29 @@ bool checkForNonNumbers(std::string &s) {
 }
 
 void testCoprime(int big, int small) {
-    float sqr = std::sqrt((float) big);
-    float flr = std::floor(sqr);
-
-    std::cout << "sqr : " << sqr <<
-            "\nflr : " << flr <<
-            "\nbig : " << big << std::endl;
+    int result = 0;
+    
+    if(big == 1 && small == 0){
+        std::cout << "Relatively Prime!" << std::endl;
+        return;
+    }
+    else if(big != 1 && small == 0){
+        std::cout << "NOT realatively prime!" << std::endl;
+        return;
+    }
+    else{
+        result = big % small;
+        testCoprime(result,small);
+    }
+    
+//    int result = big % m;
+//    
+//    float sqr = std::sqrt((float) big);
+//    float flr = std::floor(sqr);
+//
+//    std::cout << "sqr : " << sqr <<
+//            "\nflr : " << flr <<
+//            "\nbig : " << big << std::endl;
 
 }
 

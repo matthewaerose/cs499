@@ -19,9 +19,13 @@
 #include <algorithm>
 
 //using namespace std;
-std::string plainTextFile = "/tmp/blockaffinecipherplaintextoutput.txt";
-std::string cipherTextFile = "/tmp/vcipherkey.txt";
-std::string outputTextFile = "/tmp/secondplaintext.txt";
+//std::string plainTextFile = "/tmp/blockaffinecipherplaintextoutput.txt";
+//std::string cipherTextFile = "/tmp/vcipherkey.txt";
+//std::string outputTextFile = "/tmp/secondplaintext.txt";
+
+std::string plainTextFile = "c:/myTmp/blockaffinecipherplaintextoutput.txt";
+std::string cipherTextFile = "c:/myTmp/vcipherkey.txt";
+std::string outputTextFile = "c:/myTmp/secondplaintext.txt";
 
 std::string alphabet_S = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const std::string alphabet_L = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";

@@ -21,9 +21,14 @@
 
 #include <cctype>
 
-std::string plainTextFile = "/tmp/plaintext.txt";
-std::string cipherTextFile = "/tmp/vcipherkey.txt";
-std::string outputTextFile = "/tmp/vigenerecipheroutput.txt";
+//std::string plainTextFile = "/tmp/plaintext.txt";
+//std::string cipherTextFile = "/tmp/vcipherkey.txt";
+//std::string outputTextFile = "/tmp/vigenerecipheroutput.txt";
+//std::string outputTextFile = "/tmp/blockaffinecipherplaintextoutput.txt";
+
+std::string plainTextFile = "c:/myTmp/plaintext.txt";
+std::string cipherTextFile = "c:/myTmp/vcipherkey.txt";
+std::string outputTextFile = "c:/myTmp/vigenerecipheroutput.txt";
 //std::string outputTextFile = "/tmp/blockaffinecipherplaintextoutput.txt";
 
 std::string alphabet_S = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
