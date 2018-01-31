@@ -61,6 +61,9 @@ int main(int argc, char** argv) {
     }
 
     if (readInCipherKey(cipherKey)) {
+        removeSpaces(cipherKey);
+        removeNonLetters(cipherKey);
+
     }//try to read in the cipher key
     else {
         std::cout << "could not read file " << cipherTextFile << std::endl;
@@ -236,15 +239,23 @@ void encrypt_L(std::string plain, std::string key, std::string &output) {
 
         //need to account for lower case numbers!
         //different ASCII values. See a table.
+        int partA = 0;
+        int partB = 0;
         if ((int) *it >= 97) {
-            int partA = (int) *it - 71;
-            int partB = (int) key[keyCount] - 65;
-            alphaIndex = partA + partB;
+            partA = (int) *it - 71;
         } else {
-            alphaIndex = ((int) *it - 65) + ((int) key[keyCount] - 65);
+            partA = (int) *it - 65;
         }
 
-        if (alphaIndex > (alphabetSize)) {
+        if ((int) key[keyCount] >= 97) {
+            partB = (int) key[keyCount] - 71;
+        } else {
+            partB = (int) key[keyCount] - 65;
+        }
+
+        alphaIndex = partA + partB;
+
+        if (alphaIndex > (alphabetSize - 1)) {
             alphaIndex = alphaIndex % 52;
         }
 

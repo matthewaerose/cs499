@@ -285,24 +285,8 @@ bool writeOutputFile(std::string output) {
 }
 
 void decrypt_S(std::vector<std::string> input, long long multiplier, long long offset, std::string &output) {
-    std::string build = "";
-    std::vector<std::string> mList;
-
-//    for (unsigned int i = 1; i < input.size() - 1; ++i) {
-//        //        if (input.at(i - 1) < 10) {
-//        //            build.append("0" + std::to_string(input.at(i - 1)));
-//        //        } else {
-//        build.append(input.at(i - 1));
-//        //        }
-//        if ((build.size()) % 4 == 0) {
-//            mList.push_back(build);
-//            build.clear();
-//        }
-//    }
-
     int inverse = modInverse(multiplier, 2526);
-    //    long long left = inverse * std::stoll(mList)
-    // now decrypt the blocks
+    // decrypt the blocks
     // encrypted = (mP + off) mod 2526
     std::string encrypted = "";
 
@@ -311,43 +295,79 @@ void decrypt_S(std::vector<std::string> input, long long multiplier, long long o
         C = inverse * C;
         int P = C % 2526;
 
-        std::cout << alphabet_S[P];
-        //        encrypted.append(alphabet_S[P]);
+        std::string resu = std::to_string(P);
+        std::string sOne = "";
+        std::string sTwo = "";
+
+        if (resu.size() == 1) {
+            sOne += "0";
+            sOne += "0";
+            sTwo += "0";
+            sTwo += resu[0];
+        } else if (resu.size() == 2) {
+            sOne += "0";
+            sOne += "0";
+            sTwo += resu[0];
+            sTwo += resu[1];
+        } else if (resu.size() == 3) {
+            sOne += "0";
+            sOne += resu[0];
+            sTwo += resu[1];
+            sTwo += resu[2];
+        } else if (resu.size() == 4) {
+            sOne += resu[0];
+            sOne += resu[1];
+            sTwo += resu[2];
+            sTwo += resu[3];
+        }
+        
+        encrypted += alphabet_S[std::stoi(sOne)];
+        encrypted += alphabet_S[std::stoi(sTwo)];
     }
     output = encrypted;
-
 }
 
 void decrypt_L(std::vector<std::string> input, long long multiplier, long long offset, std::string &output) {
-    std::string build = "";
-    std::vector<std::string> mList;
-
-    //build the blocks first
-    for (unsigned int i = 1; i < input.size() - 1; ++i) {
-        //        if (input.at(i - 1) < 10) {
-        //            build.append("0" + std::to_string(input.at(i - 1)));
-        //        } else {
-        build.append(input.at(i - 1));
-        //            std::cout << input.at(i - 1);
-        //        }
-        if (i % 4 == 0) {
-            mList.push_back(build);
-            build.clear();
-        }
-    }
-
-
-    // now encrypt the blocks
+    int inverse = modInverse(multiplier, 5152);
+    // decrypt the blocks
     // encrypted = (mP + off) mod 2526
     std::string encrypted = "";
 
-    for (unsigned int i = 0; i < mList.size(); ++i) {
-        long long P = std::stoll(mList.at(i));
-        long long C = (multiplier * P) + offset;
-        C = C % 5152;
+    for (unsigned int i = 0; i < input.size(); ++i) {
+        long long xMINUSb = std::stoll(input.at(i)) - offset;
+        long long mult = inverse * xMINUSb;
+        int P = mult % 5152;
 
-        encrypted.append(std::to_string(C));
+        std::string resu = std::to_string(P);
+        std::string sOne = "";
+        std::string sTwo = "";
+
+        if (resu.size() == 1) {
+            sOne += "0";
+            sOne += "0";
+            sTwo += "0";
+            sTwo += resu[0];
+        } else if (resu.size() == 2) {
+            sOne += "0";
+            sOne += "0";
+            sTwo += resu[0];
+            sTwo += resu[1];
+        } else if (resu.size() == 3) {
+            sOne += "0";
+            sOne += resu[0];
+            sTwo += resu[1];
+            sTwo += resu[2];
+        } else if (resu.size() == 4) {
+            sOne += resu[0];
+            sOne += resu[1];
+            sTwo += resu[2];
+            sTwo += resu[3];
+        }
+        
+        encrypted += alphabet_L[std::stoi(sOne)];
+        encrypted += alphabet_L[std::stoi(sTwo)];
     }
     output = encrypted;
+
 }
 

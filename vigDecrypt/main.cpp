@@ -6,7 +6,7 @@
 
 /* 
  * File:   main.cpp
- * Author: sslt
+ * Author: matthew rose
  *
  * Created on January 17, 2018, 2:07 PM
  */
@@ -18,14 +18,9 @@
 #include <cstring>
 #include <algorithm>
 
-//using namespace std;
-//std::string plainTextFile = "/tmp/blockaffinecipherplaintextoutput.txt";
-//std::string cipherTextFile = "/tmp/vcipherkey.txt";
-//std::string outputTextFile = "/tmp/secondplaintext.txt";
-
-std::string plainTextFile = "c:/myTmp/blockaffinecipherplaintextoutput.txt";
-std::string cipherTextFile = "c:/myTmp/vcipherkey.txt";
-std::string outputTextFile = "c:/myTmp/secondplaintext.txt";
+std::string plainTextFile = "/tmp/blockaffinecipherplaintextoutput.txt";
+std::string cipherTextFile = "/tmp/vcipherkey.txt";
+std::string outputTextFile = "/tmp/secondplaintext.txt";
 
 std::string alphabet_S = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const std::string alphabet_L = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
@@ -35,7 +30,9 @@ bool readInCipherKey(std::string &sKey);
 bool writeOutputFile(std::string output);
 
 std::string trim(const std::string &s);
+
 void removeSpaces(std::string &s);
+void removeNonLetters(std::string &s);
 
 void decrypt_S(std::string plain, std::string key, std::string &output);
 void decrypt_L(std::string plain, std::string key, std::string &output);
@@ -63,6 +60,8 @@ int main(int argc, char** argv) {
     }
 
     if (readInCipherKey(cipherKey)) {
+        removeSpaces(cipherKey);
+        removeNonLetters(cipherKey);
     }//try to read in the cipher key
     else {
         std::cout << "could not read file " << cipherTextFile << std::endl;
@@ -155,6 +154,22 @@ void removeSpaces(std::string &s) {
     s.erase(endIterator, s.end());
 }
 
+void removeNonLetters(std::string &s) {
+    s.erase(std::remove_if(s.begin(),
+            s.end(),
+            [](unsigned char x) {
+                return std::ispunct(x);
+            }),
+    s.end());
+
+    s.erase(std::remove_if(s.begin(),
+            s.end(),
+            [](unsigned char x) {
+                return std::isdigit(x);
+            }),
+    s.end());
+}
+
 bool writeOutputFile(std::string output) {
     std::ofstream f;
 
@@ -168,9 +183,7 @@ bool writeOutputFile(std::string output) {
             f << *it;
         }
         return true;
-
     }
-
     return false;
 }
 
@@ -207,17 +220,23 @@ void decrypt_L(std::string plain, std::string key, std::string &output) {
         //need to account for lower case numbers!
         //different ASCII values. See a table. 
 
+        int partA = 0;
+        int partB = 0;
+
         if ((int) *it >= 97) {
-            int partA = (int) *it - 71;
-            int partB = (int) key[keyCount] - 65;
-            alphaIndex = partA - partB;
+            partA = (int) *it - 71;
         } else {
-            int partA = (int) *it - 65;
-            int partB = (int) key[keyCount] - 65;
-            alphaIndex = partA - partB;
+            partA = (int) *it - 65;
         }
 
-        //        alphaIndex = ((int) key[keyCount] - 65) + ((int) *it - 65);
+        if ((int) key[keyCount] >= 97) {
+            partB = (int) key[keyCount] - 71;
+        } else{
+            partB = (int) key[keyCount] - 65;
+        }
+        
+        alphaIndex = partA - partB;
+
 
         if (alphaIndex < 0) {
             alphaIndex = alphaIndex + 52;

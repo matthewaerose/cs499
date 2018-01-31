@@ -109,7 +109,7 @@ void lettersToNumbers(std::string s, std::vector<int> &i, int mod) {
     } else {
         for (std::string::iterator t = s.begin(); t != s.end(); ++t) {
             if ((int) *t >= 97) {
-                i.push_back((int) *t - 70);
+                i.push_back((int) *t - 71);
             } else {
                 i.push_back((int) *t - 65);
             }
@@ -262,7 +262,7 @@ void encrypt_S(std::vector<int> input, long long multiplier, long long offset, s
         }
         if ((build.size()) % 4 == 0) {
             mList.push_back(build);
-            build.clear();
+            build = "";
         }
     }
 
@@ -275,6 +275,15 @@ void encrypt_S(std::vector<int> input, long long multiplier, long long offset, s
         long long C = (multiplier * P) + offset;
         long long res = C % 2526;
 
+        if (res < 999 && res > 99) {
+            encrypted += "0";
+        }
+        if (res < 99 && res > 9) {
+            encrypted += "00";
+        }
+        if (res < 9) {
+            encrypted += "000";
+        }
         encrypted += std::to_string(res);
     }
     std::cout << "ENCRYPTED: " << encrypted << std::endl;
@@ -283,32 +292,42 @@ void encrypt_S(std::vector<int> input, long long multiplier, long long offset, s
 }
 
 void encrypt_L(std::vector<int> input, long long multiplier, long long offset, std::string &output) {
-    std::string build = "";
+    std::string mBuild = "";
     std::vector<std::string> mList;
 
-    //build the blocks first
-    for (unsigned int i = 1; i < input.size() - 1; ++i) {
+    for (unsigned int i = 1; i < input.size() + 1; ++i) {
         if (input.at(i - 1) < 10) {
-            build.append("0" + std::to_string(input.at(i - 1)));
+            mBuild.append("0" + std::to_string(input.at(i - 1)));
         } else {
-            build.append(std::to_string(input.at(i - 1)));
+            mBuild.append(std::to_string(input.at(i - 1)));
         }
-        if ((build.size()) % 4 == 0) {
-            mList.push_back(build);
-            build = "";
+        if ((mBuild.size()) % 4 == 0) {
+            mList.push_back(mBuild);
+            mBuild = "";
         }
     }
 
     // now encrypt the blocks
-    // encrypted = (mP + off) mod 2526
+    // encrypted = (mP + off) mod 5152
     std::string encrypted = "";
 
     for (unsigned int i = 0; i < mList.size(); ++i) {
         long long P = std::stoll(mList.at(i));
-        long long C = (multiplier * P) + offset;
+        long long C = multiplier * P + offset;
         long long res = C % 5152;
 
+        if (res < 999 && res > 99) {
+            encrypted += "0";
+        }
+        if (res < 99 && res > 9) {
+            encrypted += "00";
+        }
+        if (res < 9) {
+            encrypted += "000";
+        }
         encrypted += std::to_string(res);
     }
+    std::cout << "ENCRYPTED: " << encrypted << std::endl;
+
     output = encrypted;
 }
