@@ -6,7 +6,7 @@
 
 /* 
  * File:   main.cpp
- * Author: Maetthew Ros
+ * Author: Matthew Rose
  *
  * Created on January 13, 2018, 10:22 AM
  */
@@ -21,15 +21,9 @@
 
 #include <cctype>
 
-//std::string plainTextFile = "/tmp/plaintext.txt";
-//std::string cipherTextFile = "/tmp/vcipherkey.txt";
-//std::string outputTextFile = "/tmp/vigenerecipheroutput.txt";
-//std::string outputTextFile = "/tmp/blockaffinecipherplaintextoutput.txt";
-
-std::string plainTextFile = "c:/myTmp/plaintext.txt";
-std::string cipherTextFile = "c:/myTmp/vcipherkey.txt";
-std::string outputTextFile = "c:/myTmp/vigenerecipheroutput.txt";
-//std::string outputTextFile = "/tmp/blockaffinecipherplaintextoutput.txt";
+std::string plainTextFile = "/tmp/plaintext.txt";
+std::string cipherTextFile = "/tmp/vcipherkey.txt";
+std::string outputTextFile = "/tmp/vigenerecipheroutput.txt";
 
 std::string alphabet_S = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 std::string alphabet_L = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
@@ -126,7 +120,7 @@ bool readInPlainText(std::string &sText) {
         removeSpaces(sText);
         removeNonLetters(sText);
 
-        if ((sText.size() % 2)) {
+        if ((sText.size() % 2 == 0)) {
             return true;
         } else {
 

@@ -26,89 +26,98 @@
  * 
  */
 
-void testCoprime(int a, int b);
-//std::string inputFile = "/tmp/vigenerecipheroutput.txt";
-//std::string cipherTextFile = "/tmp/vcipherkey.txt";
-//std::string outputTextFile = "/tmp/vigenerecipheroutput.txt";
-//std::string outputTextFile = "/tmp/blockaffinecipherplaintextoutput.txt";
-
-std::string inputFile = "c:/myTmp/vigenerecipheroutput.txt";
-//std::string cipherTextFile = "/tmp/vcipherkey.txt";
-//std::string outputTextFile = "/tmp/vigenerecipheroutput.txt";
-std::string outputTextFile = "c:/myTmp/blockaffinecipherplaintextoutput.txt";
+std::string inputFile = "/tmp/vigenerecipheroutput.txt";
+std::string outputTextFile = "/tmp/blockaffinecipheroutput.txt";
 
 std::string alphabet_S = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 std::string alphabet_L = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
-std::vector<int> primeOfMultiplier;
-std::vector<int> primeOfOffset;
+long long result;
 
 bool readInInputFile(std::string &sText);
-bool readInCipherKey(std::string &sKey);
 bool writeOutputFile(std::string output);
 
-int getPrimeFactors(int count);
+bool testCoprime(long long a, long long b);
 
-bool getMultiplier(int &m);
-bool getOffset(int &o);
+void lettersToNumbers(std::string s, std::vector<int> &i, int m);
+
+bool getMultiplier(long long &m);
+bool getOffset(long long &o);
 bool getAlphabet(int &modulo);
 
 bool checkForNonNumbers(std::string &s);
 
-bool checkIfRelativelyPrime(int mult, int mod);
-
-void removeSpaces(std::string &s);
-void removeLowercase(std::string &s);
-void removeNonLetters(std::string &s);
-
-void encrypt_S(std::string plain, std::string key, std::string &output);
-void encrypt_L(std::string plain, std::string key, std::string &output);
+void encrypt_S(std::vector<int> input, long long multiplier, long long offset, std::string &output);
+void encrypt_L(std::vector<int> input, long long multiplier, long long offset, std::string &output);
 
 int main(int argc, char** argv) {
 
     std::string inputText = "This should NOT be here";
-    int offset = -1;
-    int multiplier = -1;
+    std::string outputText = "not here";
+    long long offset = -1;
+    long long multiplier = -1;
     int modulo = -1;
+    result = 0;
+    std::vector<int> numberVector;
 
-//    readInInputFile(inputText);
+    readInInputFile(inputText);
 
     if (getAlphabet(modulo)) {
         std::cout << "Your modulo is " << modulo << std::endl;
+        lettersToNumbers(inputText, numberVector, modulo);
     }
+
     if (getMultiplier(multiplier)) {
-        std::cout << "Thanks for the multiplier of " << multiplier << "!" << std::endl;
     }
+
     if (getOffset(offset)) {
-        std::cout << "Thanks for the offset of " << offset << "!" << std::endl;
     }
 
-//    if (checkIfRelativelyPrime(multiplier, modulo)) {
-//
-//    }
+    if (testCoprime(multiplier, modulo)) {
+        std::cout << "The multiplier and modulus were co-prime!" << std::endl;
+    } else {
+        std::cout << "\nERROR ERROR ERROR ERROR\n";
+        std::cout << "The multiplier " << multiplier << " is NOT relatively prime to the modulo " << modulo << ".\n";
+        std::cout << "Please restart the program and try again with different numbers\n";
+        std::cout << "~~~~~~~END ERROR~~~~~~~\n\n";
+        return -1;
+    }
 
-//    int counter = 1;
-//    getPrimeFactors(counter);
+    std::cout << "Encrypting!" << std::endl;
 
-    testCoprime(multiplier, offset);
+    if (modulo == 2526) {
+        encrypt_S(numberVector, multiplier, offset, outputText);
+    } else {
+        encrypt_L(numberVector, multiplier, offset, outputText);
+    }
 
+    std::cout << "Writing file " << outputTextFile << std::endl;
+
+    if (writeOutputFile(outputText)) {
+        std::cout << "File " << outputTextFile << " was written." << std::endl;
+    } else {
+        std::cout << "File " << outputTextFile << " was NOT written." << std::endl;
+    }
     return 0;
 }
 
-int getPrimeFactors(int count) {
-    ++count;
-
-    int multiplyTheArray = 0;
-    for (unsigned int i = 0; i < primeOfMultiplier.size(); ++i) {
-
-    }
-
-    if (primeOfMultiplier.size() != 0) {
-
+void lettersToNumbers(std::string s, std::vector<int> &i, int mod) {
+    if (mod == 2526) {
+        for (std::string::iterator t = s.begin(); t != s.end(); ++t) {
+            i.push_back((int) *t - 65);
+        }
+    } else {
+        for (std::string::iterator t = s.begin(); t != s.end(); ++t) {
+            if ((int) *t >= 97) {
+                i.push_back((int) *t - 70);
+            } else {
+                i.push_back((int) *t - 65);
+            }
+        }
     }
 }
 
-bool getMultiplier(int &m) {
+bool getMultiplier(long long &m) {
     std::string input = "p";
     bool check = true;
 
@@ -121,7 +130,7 @@ bool getMultiplier(int &m) {
             input.clear();
             std::cin >> input;
         } else {
-            m = std::stoi(input);
+            m = std::stoll(input);
             check = false;
             return true;
         }
@@ -130,7 +139,7 @@ bool getMultiplier(int &m) {
     return false;
 }
 
-bool getOffset(int &o) {
+bool getOffset(long long &o) {
     std::string input = "p";
     bool check = true;
 
@@ -143,7 +152,7 @@ bool getOffset(int &o) {
             input.clear();
             std::cin >> input;
         } else {
-            o = std::stoi(input);
+            o = std::stoll(input);
             check = false;
             return true;
         }
@@ -163,11 +172,11 @@ bool getAlphabet(int &modulo) {
 
     while (check) {
         if (strcmp(ess.c_str(), input.c_str()) == 0) {
-            modulo = 26;
+            modulo = 2526;
             check = false;
             return true;
         } else if (strcmp(ell.c_str(), input.c_str()) == 0) {
-            modulo = 52;
+            modulo = 5152;
             check = false;
             return true;
         } else {
@@ -180,46 +189,28 @@ bool getAlphabet(int &modulo) {
     return false;
 }
 
-bool checkIfRelativelyPrime(int mult, int mod) {
-
-    std::cout << "\nERROR ERROR ERROR ERROR\n";
-    std::cout << "The multiplier " << mult << " is NOT relatively prime to the modulo " << mod << ".\n";
-    std::cout << "Please restart the program and try again with different numbers\n";
-    std::cout << "~~~~~~~END ERROR~~~~~~~\n\n";
-    return false;
-}
-
 bool checkForNonNumbers(std::string &s) {
     std::string::const_iterator it = s.begin();
     while (it != s.end() && std::isdigit(*it)) ++it;
     return !s.empty() && it == s.end();
 }
 
-void testCoprime(int big, int small) {
-    int result = 0;
-    
-    if(big == 1 && small == 0){
-        std::cout << "Relatively Prime!" << std::endl;
-        return;
-    }
-    else if(big != 1 && small == 0){
-        std::cout << "NOT realatively prime!" << std::endl;
-        return;
-    }
-    else{
-        result = big % small;
-        testCoprime(result,small);
-    }
-    
-//    int result = big % m;
-//    
-//    float sqr = std::sqrt((float) big);
-//    float flr = std::floor(sqr);
-//
-//    std::cout << "sqr : " << sqr <<
-//            "\nflr : " << flr <<
-//            "\nbig : " << big << std::endl;
+bool testCoprime(long long big, long long small) {
 
+    //    if (big > small) {
+    //    } else {
+    //        int swap = big;
+    //        big = small;
+    //        small = swap;
+    //    }
+    if (big == 1 && small == 0) {
+        return true;
+    } else if (big != 1 && small == 0) {
+        return false;
+    } else {
+        result = big % small;
+        testCoprime(small, result);
+    }
 }
 
 bool readInInputFile(std::string &sText) {
@@ -234,77 +225,12 @@ bool readInInputFile(std::string &sText) {
         myFile.close();
         sText = out;
 
-        removeSpaces(sText);
-        removeNonLetters(sText);
-
-        if ((sText.size() % 2)) {
-            return true;
-        } else {
-
-            sText.append("A");
-            return true;
-        }
     } else {
         std::cout << "file " << inputFile << " didn't open!" << std::endl;
         return false;
     }
 
     return true;
-}
-
-bool readInCipherKey(std::string &sKey) {
-    //    std::string out;
-    //    std::ifstream myFile(cipherTextFile.c_str());
-    //
-    //    if (myFile.is_open()) {
-    //        while (std::getline(myFile, sKey)) {
-    //            out += sKey;
-    //        }
-    //        myFile.close();
-    //        sKey = out;
-    //
-    //        return true;
-    //    } else {
-    //        std::cout << "file " << cipherTextFile << " didn't open!" << std::endl;
-    //        return false;
-    //    }
-    return true;
-}
-
-void removeSpaces(std::string &s) {
-    std::string::iterator endIterator = std::remove(s.begin(), s.end(), ' ');
-    s.erase(endIterator, s.end());
-    s.erase(std::remove_if(s.begin(),
-            s.end(),
-            [](unsigned char x) {
-                return std::isspace(x);
-            }),
-    s.end());
-}
-
-void removeLowercase(std::string &s) {
-    s.erase(std::remove_if(s.begin(),
-            s.end(),
-            [](unsigned char x) {
-                return std::islower(x);
-            }),
-    s.end());
-}
-
-void removeNonLetters(std::string &s) {
-    s.erase(std::remove_if(s.begin(),
-            s.end(),
-            [](unsigned char x) {
-                return std::ispunct(x);
-            }),
-    s.end());
-
-    s.erase(std::remove_if(s.begin(),
-            s.end(),
-            [](unsigned char x) {
-                return std::isdigit(x);
-            }),
-    s.end());
 }
 
 bool writeOutputFile(std::string output) {
@@ -324,49 +250,65 @@ bool writeOutputFile(std::string output) {
     return false;
 }
 
-void encrypt_S(std::string plain, std::string key, std::string &output) {
-    unsigned int keyCount = 0;
-    int alphabetSize = alphabet_S.size();
+void encrypt_S(std::vector<int> input, long long multiplier, long long offset, std::string &output) {
+    std::string build = "";
+    std::vector<std::string> mList;
 
-    for (std::string::iterator it = plain.begin(); it != plain.end(); ++it) {
-        if (keyCount == key.size()) keyCount = 0;
-
-        int alphaIndex = ((int) key[keyCount] - 65) + ((int) *it - 65);
-
-        if (alphaIndex > (alphabetSize - 1)) {
-            alphaIndex = alphaIndex % 26;
+    for (unsigned int i = 1; i < input.size() + 1; ++i) {
+        if (input.at(i - 1) < 10) {
+            build.append("0" + std::to_string(input.at(i - 1)));
+        } else {
+            build.append(std::to_string(input.at(i - 1)));
         }
-
-        output += alphabet_S[alphaIndex];
-
-        keyCount++;
+        if ((build.size()) % 4 == 0) {
+            mList.push_back(build);
+            build.clear();
+        }
     }
+
+    // now encrypt the blocks
+    // encrypted = (mP + off) mod 2526
+    std::string encrypted = "";
+
+    for (unsigned int i = 0; i < mList.size(); ++i) {
+        long long P = std::stoll(mList.at(i));
+        long long C = (multiplier * P) + offset;
+        long long res = C % 2526;
+
+        encrypted += std::to_string(res);
+    }
+    std::cout << "ENCRYPTED: " << encrypted << std::endl;
+
+    output = encrypted;
 }
 
-void encrypt_L(std::string plain, std::string key, std::string &output) {
-    unsigned int keyCount = 0;
-    int alphabetSize = alphabet_L.size();
-    int alphaIndex = 0;
+void encrypt_L(std::vector<int> input, long long multiplier, long long offset, std::string &output) {
+    std::string build = "";
+    std::vector<std::string> mList;
 
-    for (std::string::iterator it = plain.begin(); it != plain.end(); ++it) {
-        if (keyCount == key.size()) keyCount = 0;
-
-        //need to account for lower case numbers!
-        //different ASCII values. See a table.
-        if ((int) *it >= 97) {
-            int partA = (int) *it - 71;
-            int partB = (int) key[keyCount] - 65;
-            alphaIndex = partA + partB;
+    //build the blocks first
+    for (unsigned int i = 1; i < input.size() - 1; ++i) {
+        if (input.at(i - 1) < 10) {
+            build.append("0" + std::to_string(input.at(i - 1)));
         } else {
-            alphaIndex = ((int) *it - 65) + ((int) key[keyCount] - 65);
+            build.append(std::to_string(input.at(i - 1)));
         }
-
-        if (alphaIndex > (alphabetSize)) {
-            alphaIndex = alphaIndex % 52;
+        if ((build.size()) % 4 == 0) {
+            mList.push_back(build);
+            build = "";
         }
-
-        output += alphabet_L[alphaIndex];
-
-        keyCount++;
     }
+
+    // now encrypt the blocks
+    // encrypted = (mP + off) mod 2526
+    std::string encrypted = "";
+
+    for (unsigned int i = 0; i < mList.size(); ++i) {
+        long long P = std::stoll(mList.at(i));
+        long long C = (multiplier * P) + offset;
+        long long res = C % 5152;
+
+        encrypted += std::to_string(res);
+    }
+    output = encrypted;
 }
